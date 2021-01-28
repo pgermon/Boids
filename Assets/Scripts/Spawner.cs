@@ -4,41 +4,48 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour {
 
-    public enum GizmoType { Never, SelectedOnly, Always }
-
     public Boid prefab;
     public float spawnRadius = 10;
     public int spawnCount = 10;
     public Color colour;
-    public GizmoType showSpawnRegion;
+
+    [SerializeField]
+    private int boidsCount = 0;
 
     void Awake () {
+
+        // Spawns the boids at the beginning
         for (int i = 0; i < spawnCount; i++) {
+
+            // spawns each boid at a random position inside a sphere of radius spawnRadius and with a random direction
             Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
             Boid boid = Instantiate (prefab);
             boid.transform.position = pos;
             boid.transform.forward = Random.insideUnitSphere;
-
             boid.SetColour (colour);
+            boidsCount++;
         }
     }
 
-    private void OnDrawGizmos () {
-        if (showSpawnRegion == GizmoType.Always) {
-            DrawGizmos ();
+    /* MY CODE */
+    void Update()
+    {
+        if (Input.GetKey("space"))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            //Debug.Log("space down");
+            if (Physics.Raycast(ray, out hit/*, LayerMask.NameToLayer("Wall")*/)){
+                //Debug.Log("instantiate boid");
+                Boid boid = Instantiate(prefab);
+                Vector3 pos = new Vector3(hit.point.x, hit.point.y + 2, hit.point.z);
+                boid.transform.position = pos;
+                boid.transform.forward = Random.insideUnitSphere;
+                boid.SetColour (Random.ColorHSV());
+                BoidManager manager = FindObjectOfType<BoidManager>();
+                manager.AddBoid(boid);
+                boidsCount++;
+            }
         }
     }
-
-    void OnDrawGizmosSelected () {
-        if (showSpawnRegion == GizmoType.SelectedOnly) {
-            DrawGizmos ();
-        }
-    }
-
-    void DrawGizmos () {
-
-        Gizmos.color = new Color (colour.r, colour.g, colour.b, 0.3f);
-        Gizmos.DrawSphere (transform.position, spawnRadius);
-    }
-
 }

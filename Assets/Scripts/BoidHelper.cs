@@ -7,6 +7,7 @@ public static class BoidHelper {
     const int numViewDirections = 300;
     public static readonly Vector3[] directions;
 
+    // Generate points on a sphere to create a spherical distribution of directions
     static BoidHelper () {
         directions = new Vector3[BoidHelper.numViewDirections];
 

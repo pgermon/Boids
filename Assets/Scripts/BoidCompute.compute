@@ -19,17 +19,22 @@ float avoidRadius;
 [numthreads(threadGroupSize,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
+    // Compute direction for the boid id according to all the others boids
     for (int indexB = 0; indexB < numBoids; indexB ++) {
         if (id.x != indexB) {
             Boid boidB = boids[indexB];
+
+            // compute distance between boid id and boidB
             float3 offset = boidB.position - boids[id.x].position;
             float sqrDst = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
 
+            // if boidB is in the view range of boid id, update its flock attributes
             if (sqrDst < viewRadius * viewRadius) {
                 boids[id.x].numFlockmates += 1;
                 boids[id.x].flockHeading += boidB.direction;
                 boids[id.x].flockCentre += boidB.position;
 
+                // if boidB is in the avoidance range of boid id, update its separation attribute
                 if (sqrDst < avoidRadius * avoidRadius) {
                     boids[id.x].separationHeading -= offset / sqrDst;
                 }
