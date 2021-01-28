@@ -30,18 +30,24 @@ public class Spawner : MonoBehaviour {
     /* MY CODE */
     void Update()
     {
+        // generate boids while the space key is held and the mouse cursor is on a collider of the level
         if (Input.GetKey("space"))
         {
+            // create a ray from the camera in the direction fo the mouse cursor
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            //Debug.Log("space down");
-            if (Physics.Raycast(ray, out hit/*, LayerMask.NameToLayer("Wall")*/)){
-                //Debug.Log("instantiate boid");
+            
+            // cast the ray and check if it hits a collider
+            if (Physics.Raycast(ray, out hit)){
+
+                // instantiate a boid at the hit position + a little vertical offset
                 Boid boid = Instantiate(prefab);
                 Vector3 pos = new Vector3(hit.point.x, hit.point.y + 2, hit.point.z);
                 boid.transform.position = pos;
                 boid.transform.forward = Random.insideUnitSphere;
                 boid.SetColour (Random.ColorHSV());
+
+                // add the new boid to the BoidManager
                 BoidManager manager = FindObjectOfType<BoidManager>();
                 manager.AddBoid(boid);
                 boidsCount++;

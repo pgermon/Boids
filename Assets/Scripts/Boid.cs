@@ -100,13 +100,14 @@ public class Boid : MonoBehaviour {
             acceleration += collisionAvoidForce;
         }
 
-        // set the velocity and the direction of the boid
+        // set the velocity of the boid
         velocity += acceleration * Time.deltaTime;
         float speed = velocity.magnitude;
         Vector3 dir = velocity / speed;
         speed = Mathf.Clamp (speed, settings.minSpeed, settings.maxSpeed);
         velocity = dir * speed;
 
+        // update the position and direction of the boid
         cachedTransform.position += velocity * Time.deltaTime;
         cachedTransform.forward = dir;
         position = cachedTransform.position;

@@ -85,7 +85,8 @@ public class BoidManager : MonoBehaviour {
         }
     }
 
-
+    /* MY CODE */
+    // Add a boid to the list and initialize it
     public void AddBoid(Boid b){
         this.boids.Add(b);
         b.Initialize(settings, target);

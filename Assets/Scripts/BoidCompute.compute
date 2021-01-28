@@ -19,7 +19,7 @@ float avoidRadius;
 [numthreads(threadGroupSize,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-    // Compute direction for the boid id according to all the others boids
+    // Compute attributes of the boid id according to all the others boids
     for (int indexB = 0; indexB < numBoids; indexB ++) {
         if (id.x != indexB) {
             Boid boidB = boids[indexB];
